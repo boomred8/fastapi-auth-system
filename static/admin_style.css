@@ -1,0 +1,147 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#1f2937,#111827);
+    color:#fff;
+    padding:30px;
+}
+
+.page{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+}
+
+.panel-card{
+    width:100%;
+    max-width:700px;
+    background:#ffffff;
+    color:#222;
+    border-radius:14px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+    padding:30px;
+}
+
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    gap:15px;
+}
+
+h1{
+    font-size:28px;
+    color:#111827;
+}
+
+h2{
+    font-size:20px;
+    margin-bottom:15px;
+    color:#1f2937;
+}
+
+.section{
+    margin-bottom:30px;
+    padding:20px;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    background:#f9fafb;
+}
+
+.input-group{
+    margin-bottom:16px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-size:14px;
+    color:#4b5563;
+}
+
+input,
+select{
+    width:100%;
+    padding:11px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:14px;
+    background:#fff;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:#6366f1;
+}
+
+.primary-btn,
+.secondary-btn,
+.logout-btn{
+    border:none;
+    border-radius:8px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-size:14px;
+    transition:0.2s;
+}
+
+.primary-btn{
+    width:100%;
+    background:#6366f1;
+    color:white;
+}
+
+.primary-btn:hover{
+    background:#4f46e5;
+}
+
+.secondary-btn{
+    background:#10b981;
+    color:white;
+    margin-bottom:15px;
+}
+
+.secondary-btn:hover{
+    background:#059669;
+}
+
+.logout-btn{
+    background:#ef4444;
+    color:white;
+}
+
+.logout-btn:hover{
+    background:#dc2626;
+}
+
+.result-box{
+    background:#111827;
+    color:#22c55e;
+    padding:14px;
+    border-radius:10px;
+    font-size:13px;
+    overflow:auto;
+    min-height:80px;
+}
+
+.form-message{
+    margin-top:15px;
+    font-size:14px;
+    min-height:20px;
+}
+
+.form-message.success{
+    color:#16a34a;
+}
+
+.form-message.error{
+    color:#dc2626;
+}

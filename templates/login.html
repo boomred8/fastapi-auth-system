@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Login Page</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="login-card">
+        <h1>Login</h1>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <p id="message" class="message"></p>
+    </div>
+</div>
+
+<script>
+const loginForm = document.getElementById("loginForm");
+const messageBlock = document.getElementById("message");
+
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    messageBlock.textContent = "";
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const formData = new URLSearchParams();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    try {
+        const response = await fetch("/api/v1/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageBlock.textContent = data.detail || "Login failed";
+            messageBlock.className = "message error";
+            return;
+        }
+
+        localStorage.setItem("access_token", data.access_token);
+
+        messageBlock.textContent = "Login successful";
+        messageBlock.className = "message success";
+
+        window.location.href = "/api/v1/admin-panel/page";
+
+    } catch (error) {
+        messageBlock.textContent = "Request error";
+        messageBlock.className = "message error";
+    }
+});
+</script>
+
+</body>
+</html>

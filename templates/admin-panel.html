@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/admin_style.css">
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<div class="page">
+    <div class="panel-card">
+        <div class="top-bar">
+            <h1>Admin Panel</h1>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+
+        <div class="section">
+            <h2>Current User</h2>
+            <button id="loadMeBtn" class="secondary-btn">Load My Data</button>
+            <pre id="meResult" class="result-box"></pre>
+        </div>
+
+        <div class="section">
+            <h2>Create New User</h2>
+
+            <form id="createUserForm">
+                <div class="input-group">
+                    <label for="newUsername">Username</label>
+                    <input type="text" id="newUsername" name="username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="newPassword">Password</label>
+                    <input type="password" id="newPassword" name="password" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="newRole">Role</label>
+                    <select id="newRole" name="role">
+                        <option value="user" selected>user</option>
+                        <option value="admin">admin</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="primary-btn">Create User</button>
+            </form>
+
+            <p id="formMessage" class="form-message"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("access_token");
+
+if (!token) {
+    window.location.href = "/api/v1/auth/login";
+}
+
+const logoutBtn = document.getElementById("logoutBtn");
+const loadMeBtn = document.getElementById("loadMeBtn");
+const meResult = document.getElementById("meResult");
+const createUserForm = document.getElementById("createUserForm");
+const formMessage = document.getElementById("formMessage");
+
+logoutBtn.addEventListener("click", function() {
+    localStorage.removeItem("access_token");
+    window.location.href = "/api/v1/auth/login";
+});
+
+loadMeBtn.addEventListener("click", async function() {
+    try {
+        const response = await fetch("/api/v1/auth/me", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            meResult.textContent = JSON.stringify(data, null, 2);
+            return;
+        }
+
+        meResult.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+        meResult.textContent = "Failed to load user data";
+    }
+});
+
+createUserForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    formMessage.textContent = "";
+    formMessage.className = "form-message";
+
+    const username = document.getElementById("newUsername").value;
+    const password = document.getElementById("newPassword").value;
+    const role = document.getElementById("newRole").value;
+
+    try {
+        const response = await fetch("/api/v1/admin-panel/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                role: role
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            formMessage.textContent = data.detail || "Failed to create user";
+            formMessage.className = "form-message error";
+            return;
+        }
+
+        formMessage.textContent = `User "${data.username}" created successfully`;
+        formMessage.className = "form-message success";
+        createUserForm.reset();
+
+    } catch (error) {
+        formMessage.textContent = "Request error";
+        formMessage.className = "form-message error";
+    }
+});
+</script>
+
+</body>
+</html>
