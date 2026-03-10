@@ -3,52 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/admin_style.css">
     <title>Admin Panel</title>
+    <link rel="stylesheet" href="/static/admin_style.css">
 </head>
 <body>
+<div class="app-shell">
 
-<div class="page">
-    <div class="panel-card">
-        <div class="top-bar">
-            <h1>Admin Panel</h1>
-            <button id="logoutBtn" class="logout-btn">Logout</button>
+    <aside class="sidebar">
+        <div class="sidebar__top">
+            <div class="brand">
+                <div class="brand__logo">A</div>
+                <div class="brand__text">
+                    <h2>Admin Panel</h2>
+                    <p>Secure control center</p>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <button class="nav__item nav__item--active" type="button">Overview</button>
+                <button class="nav__item" type="button" id="loadMeBtn">Current User</button>
+                <button class="nav__item" type="button">Create User</button>
+                <button class="nav__item" type="button">Update User</button>
+            </nav>
         </div>
 
-        <div class="section">
-            <h2>Current User</h2>
-            <button id="loadMeBtn" class="secondary-btn">Load My Data</button>
-            <pre id="meResult" class="result-box"></pre>
+        <div class="sidebar__bottom">
+            <div class="profile-card">
+                <div class="profile-card__avatar">AD</div>
+                <div>
+                    <div class="profile-card__name">Administrator</div>
+                    <div class="profile-card__role">Role-based access</div>
+                </div>
+            </div>
+
+            <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
         </div>
+    </aside>
 
-        <div class="section">
-            <h2>Create New User</h2>
+    <main class="main-content">
+        <header class="hero">
+            <div class="hero__text">
+                <span class="hero__badge">JWT Protected Workspace</span>
+                <h1>Manage your users with clarity and control</h1>
+                <p>
+                    Create accounts, update credentials, and control access status
+                    from one elegant admin workspace.
+                </p>
+            </div>
+        </header>
 
-            <form id="createUserForm">
-                <div class="input-group">
-                    <label for="newUsername">Username</label>
-                    <input type="text" id="newUsername" name="username" required>
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-card__label">Security</span>
+                <h3>Admin Access</h3>
+                <p>Protected routes available only for authenticated admin users.</p>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-card__label">Authentication</span>
+                <h3>JWT Session</h3>
+                <p>Frontend communicates with backend using bearer token requests.</p>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-card__label">Workflow</span>
+                <h3>User Management</h3>
+                <p>Create and update users from a clean dashboard interface.</p>
+            </div>
+        </section>
+
+        <section class="content-grid">
+            <div class="panel panel--wide">
+                <div class="panel__header">
+                    <div>
+                        <h2>Current User</h2>
+                        <p>Load current authenticated account data</p>
+                    </div>
+                    <button id="loadMeBtnTop" class="secondary-btn" type="button">Load Data</button>
                 </div>
 
-                <div class="input-group">
-                    <label for="newPassword">Password</label>
-                    <input type="password" id="newPassword" name="password" required>
+                <pre id="meResult" class="result-box"></pre>
+            </div>
+
+            <div class="panel">
+                <div class="panel__header">
+                    <div>
+                        <h2>Create New User</h2>
+                        <p>Add a new account with selected role</p>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="newRole">Role</label>
-                    <select id="newRole" name="role">
-                        <option value="user" selected>user</option>
-                        <option value="admin">admin</option>
-                    </select>
+                <form id="createUserForm" class="form-grid">
+                    <div class="field">
+                        <label for="createUsername">Username</label>
+                        <input type="text" id="createUsername" name="username" placeholder="Enter username" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="createPassword">Password</label>
+                        <input type="password" id="createPassword" name="password" placeholder="Enter password" required>
+                    </div>
+
+                    <div class="field field--full">
+                        <label for="createRole">Role</label>
+                        <select id="createRole" name="role">
+                            <option value="user" selected>user</option>
+                            <option value="admin">admin</option>
+                        </select>
+                    </div>
+
+                    <div class="field field--full">
+                        <button type="submit" class="primary-btn">Create User</button>
+                    </div>
+                </form>
+
+                <p id="createMessage" class="message"></p>
+            </div>
+
+            <div class="panel">
+                <div class="panel__header">
+                    <div>
+                        <h2>Update User</h2>
+                        <p>Change username, password, or active state</p>
+                    </div>
                 </div>
 
-                <button type="submit" class="primary-btn">Create User</button>
-            </form>
+                <form id="updateUserForm" class="form-grid">
+                    <div class="field field--full">
+                        <label for="updateUserId">User ID</label>
+                        <input type="number" id="updateUserId" name="user_id" placeholder="Enter user ID" required>
+                    </div>
 
-            <p id="formMessage" class="form-message"></p>
-        </div>
-    </div>
+                    <div class="field">
+                        <label for="updateUsername">New Username</label>
+                        <input type="text" id="updateUsername" name="username" placeholder="Leave empty if unchanged">
+                    </div>
+
+                    <div class="field">
+                        <label for="updatePassword">New Password</label>
+                        <input type="password" id="updatePassword" name="password" placeholder="Leave empty if unchanged">
+                    </div>
+
+                    <div class="field field--full">
+                        <label for="updateIsActive">Is Active</label>
+                        <select id="updateIsActive" name="is_active">
+                            <option value="" selected>Do not change</option>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                    </div>
+
+                    <div class="field field--full">
+                        <button type="submit" class="primary-btn">Update User</button>
+                    </div>
+                </form>
+
+                <p id="updateMessage" class="message"></p>
+            </div>
+        </section>
+    </main>
 </div>
 
 <script>
@@ -60,16 +173,21 @@ if (!token) {
 
 const logoutBtn = document.getElementById("logoutBtn");
 const loadMeBtn = document.getElementById("loadMeBtn");
+const loadMeBtnTop = document.getElementById("loadMeBtnTop");
 const meResult = document.getElementById("meResult");
-const createUserForm = document.getElementById("createUserForm");
-const formMessage = document.getElementById("formMessage");
 
-logoutBtn.addEventListener("click", function() {
+const createUserForm = document.getElementById("createUserForm");
+const createMessage = document.getElementById("createMessage");
+
+const updateUserForm = document.getElementById("updateUserForm");
+const updateMessage = document.getElementById("updateMessage");
+
+logoutBtn.addEventListener("click", function () {
     localStorage.removeItem("access_token");
     window.location.href = "/api/v1/auth/login";
 });
 
-loadMeBtn.addEventListener("click", async function() {
+async function loadCurrentUser() {
     try {
         const response = await fetch("/api/v1/auth/me", {
             method: "GET",
@@ -89,17 +207,20 @@ loadMeBtn.addEventListener("click", async function() {
     } catch (error) {
         meResult.textContent = "Failed to load user data";
     }
-});
+}
 
-createUserForm.addEventListener("submit", async function(event) {
+loadMeBtn.addEventListener("click", loadCurrentUser);
+loadMeBtnTop.addEventListener("click", loadCurrentUser);
+
+createUserForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    formMessage.textContent = "";
-    formMessage.className = "form-message";
+    createMessage.textContent = "";
+    createMessage.className = "message";
 
-    const username = document.getElementById("newUsername").value;
-    const password = document.getElementById("newPassword").value;
-    const role = document.getElementById("newRole").value;
+    const username = document.getElementById("createUsername").value.trim();
+    const password = document.getElementById("createPassword").value.trim();
+    const role = document.getElementById("createRole").value;
 
     try {
         const response = await fetch("/api/v1/admin-panel/users", {
@@ -118,21 +239,79 @@ createUserForm.addEventListener("submit", async function(event) {
         const data = await response.json();
 
         if (!response.ok) {
-            formMessage.textContent = data.detail || "Failed to create user";
-            formMessage.className = "form-message error";
+            createMessage.textContent = data.detail || "Failed to create user";
+            createMessage.className = "message message--error";
             return;
         }
 
-        formMessage.textContent = `User "${data.username}" created successfully`;
-        formMessage.className = "form-message success";
+        createMessage.textContent = `User "${data.username}" created successfully`;
+        createMessage.className = "message message--success";
         createUserForm.reset();
 
     } catch (error) {
-        formMessage.textContent = "Request error";
-        formMessage.className = "form-message error";
+        createMessage.textContent = "Request error";
+        createMessage.className = "message message--error";
+    }
+});
+
+updateUserForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    updateMessage.textContent = "";
+    updateMessage.className = "message";
+
+    const userId = document.getElementById("updateUserId").value;
+    const username = document.getElementById("updateUsername").value.trim();
+    const password = document.getElementById("updatePassword").value.trim();
+    const isActiveValue = document.getElementById("updateIsActive").value;
+
+    const payload = {};
+
+    if (username !== "") {
+        payload.username = username;
+    }
+
+    if (password !== "") {
+        payload.password = password;
+    }
+
+    if (isActiveValue !== "") {
+        payload.is_active = isActiveValue === "true";
+    }
+
+    if (Object.keys(payload).length === 0) {
+        updateMessage.textContent = "Please provide at least one field to update";
+        updateMessage.className = "message message--error";
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/v1/admin-panel/users/${userId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            updateMessage.textContent = data.detail || "Failed to update user";
+            updateMessage.className = "message message--error";
+            return;
+        }
+
+        updateMessage.textContent = `User "${data.username}" updated successfully`;
+        updateMessage.className = "message message--success";
+        updateUserForm.reset();
+
+    } catch (error) {
+        updateMessage.textContent = "Request error";
+        updateMessage.className = "message message--error";
     }
 });
 </script>
-
 </body>
 </html>

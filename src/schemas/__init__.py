@@ -1,1 +1,1 @@
-from .main_schema import UserAddByAdminSchema, UserReadSchema
+from .main_schema import UserAddByAdminSchema, UserReadSchema, UserUpdateSchema
