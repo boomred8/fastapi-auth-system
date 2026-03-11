@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
 
@@ -27,6 +29,19 @@ async def admin_panel_page(request: Request):
             "request": request,
         }
     )
+
+@admin_router.get("/users",
+                  response_model=List[UserReadSchema]) #для таблицы чтобы юзер знал какие есть
+async def all_users(
+        session: SessionDep,
+        admin: UserModel = Depends(get_current_admin),
+):
+    result = await session.execute(select(UserModel))
+    users = result.scalars().all()
+
+    return users
+
+
 
 
 @admin_router.post("/users",
@@ -68,7 +83,7 @@ async def update_user(
         session: SessionDep,
         new_data: UserUpdateSchema,
         user_id: int,
-        admin: UserModel = Depends(get_current_admin),
+        admin: UserModel = Depends(get_current_admin)
 ):
     result = await session.execute(
         select(UserModel).where(UserModel.id == user_id)
@@ -77,6 +92,9 @@ async def update_user(
 
     if existing_user is None:
         raise HTTPException(status_code=404, detail="User not found")
+
+    if existing_user.role == "admin":
+        raise HTTPException(status_code=409, detail="Admin users cannot be updated")
 
     update_data = new_data.model_dump(exclude_none=True) # Автоматический убирает None
 
@@ -96,5 +114,32 @@ async def update_user(
 
     await session.commit()
     await session.refresh(existing_user)
+
+    return existing_user
+
+
+@admin_router.delete("/users/{user_id}",
+                     response_model=UserReadSchema)
+async def delete_user(
+        session: SessionDep,
+        user_id: int,
+        admin: UserModel = Depends(get_current_admin)
+):
+    result = await session.execute(
+        select(UserModel).where(UserModel.id == user_id)
+    )
+    existing_user = result.scalars().first()
+
+    if existing_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if existing_user.id == admin.id:
+        raise HTTPException(status_code=400, detail="You cannot remove yourself")
+
+    if existing_user.role == "admin":
+        raise HTTPException(status_code=403, detail="Admin users cannot be deleted")
+
+    await session.delete(existing_user)
+    await session.commit()
 
     return existing_user
