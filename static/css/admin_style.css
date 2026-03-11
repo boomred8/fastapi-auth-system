@@ -457,3 +457,44 @@ option{
         grid-column:auto;
     }
 }
+
+.table-wrapper{
+    overflow:auto;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(5,10,20,0.45);
+}
+
+.users-table{
+    width:100%;
+    border-collapse:collapse;
+    color:white;
+    font-size:14px;
+}
+
+.users-table thead{
+    background:rgba(255,255,255,0.06);
+}
+
+.users-table th,
+.users-table td{
+    text-align:left;
+    padding:16px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.users-table th{
+    color:#dbe4ff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.users-table td{
+    color:#e5e7eb;
+}
+
+.empty-row{
+    text-align:center !important;
+    color:#94a3b8 !important;
+    padding:24px !important;
+}

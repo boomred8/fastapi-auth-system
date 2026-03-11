@@ -86,6 +86,35 @@
                 <pre id="meResult" class="result-box"></pre>
             </div>
 
+            <div class="panel panel--wide">
+                <div class="panel__header">
+                    <div>
+                        <h2>Users Table</h2>
+                        <p>View all registered users in the system</p>
+                    </div>
+                    <button id="loadUsersBtn" class="secondary-btn" type="button">Load Users</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Active</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="5" class="empty-row">No users loaded yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="panel">
                 <div class="panel__header">
                     <div>

@@ -1,4 +1,6 @@
 const token = localStorage.getItem("access_token");
+const loadUsersBtn = document.getElementById("loadUsersBtn");
+const usersTableBody = document.getElementById("usersTableBody");
 
 if (!token) {
     window.location.href = "/api/v1/auth/login";
@@ -39,6 +41,54 @@ async function loadCurrentUser() {
         meResult.textContent = JSON.stringify(data, null, 2);
     } catch (error) {
         meResult.textContent = "Failed to load user data";
+    }
+}
+
+async function loadUsersTable() {
+    try {
+        const response = await fetch("/api/v1/admin-panel/users", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            usersTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-row">Failed to load users</td>
+                </tr>
+            `;
+            return;
+        }
+
+        if (!data.length) {
+            usersTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-row">No users found</td>
+                </tr>
+            `;
+            return;
+        }
+
+        usersTableBody.innerHTML = data.map(user => `
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.role}</td>
+                <td>${user.is_active}</td>
+                <td>${user.create_at}</td>
+            </tr>
+        `).join("");
+
+    } catch (error) {
+        usersTableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-row">Request error</td>
+            </tr>
+        `;
     }
 }
 
@@ -147,3 +197,4 @@ updateUserForm.addEventListener("submit", async function (event) {
 });
 
 loadCurrentUser();
+loadUsersBtn.addEventListener("click", loadUsersTable);
